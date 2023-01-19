@@ -1,10 +1,11 @@
 package com.example.actuatorservice;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -15,6 +16,15 @@ public class GreetingController {
     private static final String template = "Hello, %s";
     private final AtomicLong counter = new AtomicLong();
 
+    private static final Map<Integer, Product> products = new HashMap<>();
+    static {
+        Product honey = new Product(1, "Honey", "Sweet Honey");
+        products.put(1, honey);
+
+        Product almond = new Product(2, "Almond", "Tasty Almond");
+        products.put(2, almond);
+    }
+
     @GetMapping("/")
     public ServiceInfo name() {
         return new ServiceInfo(name);
@@ -23,5 +33,20 @@ public class GreetingController {
     @GetMapping("/hello-world")
     public Greeting sayHello(@RequestParam(name="name", required = false, defaultValue = "Stranger") String name) {
         return new Greeting(counter.incrementAndGet(), String.format(template, name));
+    }
+
+    @GetMapping("/products")
+    public List<Product> getProductList() {
+        return products.values().stream().toList();
+    }
+
+    @GetMapping("/product/{id}")
+    public Product getProduct(@PathVariable("id") int id) {
+        return products.get(id);
+    }
+
+    @PutMapping("/product")
+    public Product createProduct(@RequestBody Product product) {
+        return new Product(3, product.getName(), product.getDescription());
     }
 }
