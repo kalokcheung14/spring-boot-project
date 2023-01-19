@@ -1,5 +1,6 @@
 package com.example.actuatorservice;
 
+import com.example.actuatorservice.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,8 @@ public class GreetingController {
 
     @GetMapping("/product/{id}")
     public Product getProduct(@PathVariable("id") int id) {
+        // Handle case when product ID is not found
+        if (!products.containsKey(id)) throw new ProductNotFoundException();
         return products.get(id);
     }
 
