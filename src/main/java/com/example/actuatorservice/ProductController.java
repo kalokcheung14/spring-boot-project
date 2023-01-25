@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Logger;
 
 @RestController
 public class ProductController {
+    private static final Logger LOG = Logger.getLogger(String.valueOf(ProductController.class));
     @Autowired
     ProductService productService;
 
@@ -21,6 +23,7 @@ public class ProductController {
 
     @GetMapping("/")
     public ServiceInfo name() {
+        LOG.info("Index API is calling");
         return new ServiceInfo(name);
     }
 
