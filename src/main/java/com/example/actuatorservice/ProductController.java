@@ -46,4 +46,9 @@ public class ProductController {
     public Product createProduct(@RequestBody Product product) {
         return productService.createProduct(product);
     }
+
+    @GetMapping("/product/search")
+    public List<Product> searchProduct(@RequestParam String name) {
+        return productService.searchProduct(name);
+    }
 }

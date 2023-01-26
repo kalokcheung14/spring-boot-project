@@ -44,4 +44,9 @@ public class ProductServiceImpl implements ProductService{
     public List<Product> getProductList() {
         return jpaProductRepository.findAll();
     }
+
+    @Override
+    public List<Product> searchProduct(String name) {
+        return jpaProductRepository.findProductByName(name);
+    }
 }
