@@ -1,9 +1,20 @@
 package com.example.actuatorservice;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "products")
 public class Product {
-    private final long id;
-    private final String name;
-    private final String description;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "description")
+    private String description;
+
+    public Product() {
+    }
 
     public Product(long id, String name, String description) {
         this.id = id;

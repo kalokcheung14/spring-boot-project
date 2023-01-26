@@ -2,6 +2,7 @@ package com.example.actuatorservice.service;
 
 import com.example.actuatorservice.Product;
 import com.example.actuatorservice.ProductController;
+import com.example.actuatorservice.db.repository.JpaProductRepository;
 import com.example.actuatorservice.db.repository.ProductRepository;
 import com.example.actuatorservice.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,31 +19,22 @@ import java.util.logging.Logger;
 public class ProductServiceImpl implements ProductService{
     private static final Logger LOG = Logger.getLogger(String.valueOf(ProductService.class));
 
+//    @Autowired
+//    @Qualifier("jdbcProductRepository")
+//    private ProductRepository productRepository;
+
     @Autowired
-    @Qualifier("jdbcProductRepository")
-    private ProductRepository productRepository;
-
-    private static final Map<Integer, Product> products = new HashMap<>();
-    static {
-        Product honey = new Product(1, "Honey", "Sweet Honey");
-        products.put(1, honey);
-
-        Product almond = new Product(2, "Almond", "Tasty Almond");
-        products.put(2, almond);
-    }
+    JpaProductRepository jpaProductRepository;
 
     @Override
     public Product createProduct(Product product) {
-        productRepository.save(product);
-        Optional<Product> productLatest = productRepository.findLatest();
-        if (productLatest.isEmpty()) throw new ProductNotFoundException();
-        return productLatest.get();
+        return jpaProductRepository.save(product);
     }
 
     @Override
     public Product getProduct(int id) {
         // Handle case when product ID is not found
-        Optional<Product> product = productRepository.findById(id);
+        Optional<Product> product = jpaProductRepository.findById(id);
         LOG.info(product.toString());
         if (product.isEmpty()) throw new ProductNotFoundException();
         return product.get();
@@ -50,6 +42,6 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<Product> getProductList() {
-        return productRepository.findAll();
+        return jpaProductRepository.findAll();
     }
 }
